@@ -66,6 +66,34 @@ namespace SportsORM.Controllers
         [HttpGet("level_2")]
         public IActionResult Level2()
         {
+            ViewBag.AtlSoccer = context.Teams
+                .Include(atl => atl.CurrLeague)
+                .Where(atl => atl.CurrLeague.Name.Contains("Atlantic Soccer"));
+            ViewBag.PengPlayers = context.Teams
+                .Include(t => t.CurrentPlayers)
+                .Where(t => t.Location == "Boston");
+            ViewBag.ColBaseball = context.Teams
+                .Where(t => t.CurrLeague.Name.Contains("Collegiate"));
+            ViewBag.ColBaseball = context.Teams
+                .Where(t => t.CurrLeague.Name.Contains("Amateur Football"));
+            ViewBag.AllFootball = context.Teams
+                .Where(t => t.CurrLeague.Sport == "Football");
+            ViewBag.SophiaTeams = context.Players
+                .Include(p => p.CurrentTeam)
+                .Where(p => p.FirstName == "Sophia")
+                .ToList();
+            ViewBag.Flores = context.Players
+                .Where(p => p.LastName == "Flores" && p.CurrentTeam.TeamName != "Raptors");
+            ViewBag.MTC = context.Teams
+                .Include(t => t.CurrentPlayers)
+                .Where(t => t.TeamName == "Tiger-Cats")
+                .ToList();
+            ViewBag.TwelveAngryTeams = context.Teams
+                .Include(t => t.AllPlayers)
+                .Include(t => t.CurrLeague)
+                .OrderByDescending(t => t.AllPlayers.Count)
+                .Where(t => t.AllPlayers.Count > 11)
+                .ToList();
             return View();
         }
 
